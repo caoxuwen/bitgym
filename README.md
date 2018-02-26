@@ -1,3 +1,10 @@
+# BitGym
+
+BitGym contains several agents that applies reinforcement learning on bitcoin trading. This is a CS234 course project.
+
+This project depends on the [TradingGym](https://github.com/Yvictor/TradingGym) project.
+
+
 # TradingGym
 
 [![Build Status](https://travis-ci.org/Yvictor/TradingGym.svg?branch=master)](https://travis-ci.org/Yvictor/TradingGym)
