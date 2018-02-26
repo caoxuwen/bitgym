@@ -341,7 +341,7 @@ class trading_env:
             rect3 = [left, 0.05, width, 0.15]
 
             self.fig = plt.figure(figsize=(15,8))
-            self.fig.suptitle('%s'%self.df_sample['datetime'].iloc[0].date(), fontsize=14, fontweight='bold')
+            self.fig.suptitle('%s'%pd.to_datetime(self.df_sample['datetime'], unit="s").iloc[0].date(), fontsize=14, fontweight='bold')
             #self.ax = self.fig.add_subplot(1,1,1)
             self.ax = self.fig.add_axes(rect1)  # left, bottom, width, height
             self.ax2 = self.fig.add_axes(rect2, sharex=self.ax)

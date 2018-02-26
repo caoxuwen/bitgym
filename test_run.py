@@ -11,7 +11,7 @@ env = trading_env.make(env_id='training_v1', obs_data_len=256, step_len=128,
                        feature_names=['Price', 'Volume', 
                                       'Ask_price','Bid_price', 
                                       'Ask_deal_vol','Bid_deal_vol',
-                                      'Bid/Ask_deal', 'Updown'])
+                                      'Bid/Ask_deal', 'Updownt'])
 
 env.reset()
 env.render()
@@ -19,7 +19,7 @@ env.render()
 state, reward, done, info = env.step(random.randrange(3))
 
 ### randow choice action and show the transaction detail
-for i in range(500):
+for i in range(2000):
     print(i)
     state, reward, done, info = env.step(random.randrange(3))
     print(state, reward)
