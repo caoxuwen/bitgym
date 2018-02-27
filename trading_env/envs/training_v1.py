@@ -15,7 +15,7 @@ class trading_env:
                  df, fee, max_position=5, deal_col_name='price', 
                  feature_names=['price', 'volume'], 
                  return_transaction=True,
-                 fluc_div=100.0, gameover_limit=5,
+                 fluc_div=100.0, gameover_limit=5, max_steps=10,
                  *args, **kwargs):
         """
         #assert df 
@@ -32,6 +32,9 @@ class trading_env:
         # deal_col_name -> the column name for cucalate reward used.
         # feature_names -> list contain the feature columns to use in trading status.
         # ?day trade option set as default if don't use this need modify
+        #
+        # max_steps: the maximum steps of an episode. This is a hack to terminate
+        #    the episode so that the current {D}QN agent works.
         """
         logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(message)s')
         self.logger = logging.getLogger(env_id)
@@ -65,6 +68,9 @@ class trading_env:
         self.new_rotation, self.cover_rotation = (1, 2)
         self.transaction_details = pd.DataFrame()
         self.logger.info('Making new env: {}'.format(env_id))
+
+        self.current_step = 0 # =self.t_index?
+        self.max_steps = max_steps
     
     def _random_choice_section(self):
         random_int = np.random.randint(self.date_leng)
@@ -90,6 +96,8 @@ class trading_env:
         # position entry or cover :new_entry->1  increase->2 cover->-1 decrease->-2
         self.posi_entry_cover_arr = np.zeros_like(self.posi_arr)
         # self.position_feature = np.array(self.posi_l[self.step_st:self.step_st+self.obs_len])/(self.max_position*2)+0.5
+
+        self.current_step = 0
         
         self.price_mean_arr = self.price.copy()
         self.reward_fluctuant_arr = (self.price - self.price_mean_arr)*self.posi_arr
@@ -180,6 +188,7 @@ class trading_env:
         current_price_mean = self.price_mean_arr[current_index]
         current_mkt_position = self.posi_arr[current_index]
 
+        self.current_step += 1
         self.t_index += 1
         self.step_st += self.step_len
         # observation part
@@ -205,7 +214,7 @@ class trading_env:
         self.chg_reward = self.obs_reward[-self.step_len:]
 
         done = False
-        if self.step_st+self.obs_len+self.step_len >= len(self.price):
+        if self.step_st+self.obs_len+self.step_len >= len(self.price) or self.current_step >= self.max_steps:
             done = True
             action = -1
             if current_mkt_position != 0:
@@ -215,6 +224,9 @@ class trading_env:
                 self.chg_posi_entry_cover[:1] = -2
                 self.chg_makereal[:1] = 1
                 self.chg_reward[:] = ((self.chg_price - self.chg_price_mean)*(current_mkt_position) - abs(current_mkt_position)*self.fee)*self.chg_makereal
+            # This block is very slow. Comment it to accelerate the speed.
+            """
+            #print 'here'
             self.transaction_details = pd.DataFrame([self.posi_arr,
                                                      self.posi_variation_arr,
                                                      self.posi_entry_cover_arr,
@@ -227,6 +239,8 @@ class trading_env:
                                                             'reward'], 
                                                      columns=self.df_sample.index).T
             self.info = self.df_sample.join(self.transaction_details)
+            #print 'here'
+            """
 
             
         # use next tick, maybe choice avg in first 10 tick will be better to real backtest
