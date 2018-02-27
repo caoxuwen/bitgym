@@ -1,6 +1,7 @@
 
 import os
 import logging
+import gym
 
 import numpy as np
 import pandas as pd
@@ -37,14 +38,14 @@ class trading_env:
         #self.file_loc_path = os.environ.get('FILEPATH', '')
         
         self.df = df
-        self.action_space = 3
         self.action_describe = {0:'do nothing',
                                 1:'long',
                                 2:'short'}
+        self.action_space = gym.spaces.Discrete(len(self.action_describe))
         
         self.obs_len = obs_data_len
         self.feature_len = len(feature_names)
-        self.observation_space = np.array([self.obs_len*self.feature_len,])
+        self.observation_space = np.array([self.obs_len, self.feature_len, 1])
         self.using_feature = feature_names
         self.price_name = deal_col_name
         
