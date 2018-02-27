@@ -117,8 +117,10 @@ agent = MAAgent()
 
 df = pd.read_csv('dataset/btc_indexed.csv')
 print(df.describe())
+train_len = 2000
 env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
-                       df=df, fee=0.0, max_position=5, deal_col_name='close',
+                       df=df, fee=0.0, max_position=5, max_steps = train_len, 
+                       deal_col_name='close',
                        feature_names=['low', 'high',
                                       'open', 'close',
                                       'volume', 'datetime'])
@@ -127,6 +129,7 @@ env.render()
 
 state, reward, done, info = env.step(0)
 total_rewards = reward
+print state
 # randow choice action and show the transaction detail
 for i in range(2000):
     state, reward, done, info = env.step(agent.choice_action(state[0]))
