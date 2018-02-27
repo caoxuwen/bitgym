@@ -1,4 +1,5 @@
 import pandas as pd
+
 import tensorflow as tf
 import tensorflow.contrib.layers as layers
 
@@ -9,6 +10,7 @@ from q1_schedule import LinearExploration, LinearSchedule
 from configs.q2_linear import config
 
 import trading_env
+
 
 class Linear(DQN):
     """
@@ -25,6 +27,7 @@ class Linear(DQN):
         # this information might be useful
         # here, typically, a state shape is (80, 80, 1)
         state_shape = list(self.env.observation_space)  # (1, #features, 1)
+
 
         ##############################################################
         """
@@ -56,6 +59,7 @@ class Linear(DQN):
         ##############################################################
         ################YOUR CODE HERE (6-15 lines) ##################
         state_shape[2] = config.state_history
+
         self.s = tf.placeholder(tf.uint8, [None] + state_shape)
         self.a = tf.placeholder(tf.int32, [None])
         self.r = tf.placeholder(tf.float32, [None])
@@ -275,6 +279,7 @@ if __name__ == '__main__':
                        feature_names=['low', 'high','open','close', 'volume'])
 
     env.reset()
+
 
 
     # exploration strategy

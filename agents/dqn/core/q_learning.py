@@ -289,7 +289,6 @@ class QN(object):
             total_reward = 0
             state = env.reset()
             state = state.reshape([1, -1, 1])
-            #print state.shape
             while True:
                 if self.config.render_test: env.render()
 
@@ -306,7 +305,6 @@ class QN(object):
                 replay_buffer.store_effect(idx, action, reward, done)
                 state = new_state
                 state = state.reshape([1, -1, 1])
-                #print state.shape
 
                 # count reward
                 total_reward += reward
