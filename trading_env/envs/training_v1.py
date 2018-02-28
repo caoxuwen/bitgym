@@ -73,11 +73,9 @@ class trading_env:
         self.sample_days = sample_days
 
     def _random_choice_section(self):
-        print "blah"
         random_int = np.random.randint(self.date_leng - self.sample_days-1)
         # because only 96 15min samples from a day, we lengthen it to a week
         pts = self.begin_fs.index[random_int: random_int+self.sample_days+1]
-        print pts
         df_section = self.df.iloc[pts[0]: pts[-1]]
         return df_section
 
