@@ -20,7 +20,7 @@ env.render()
 state, reward, done, info = env.step(random.randrange(3))
 
 ### randow choice action and show the transaction detail
-for i in range(2000):
+for i in range(200):
     print(i)
     state, reward, done, info = env.step(random.randrange(3))
     print(state, reward)

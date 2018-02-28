@@ -168,6 +168,7 @@ class QN(object):
         while t < self.config.nsteps_train:
             total_reward = 0
             state = self.env.reset()
+            state = state.reshape([1, -1, 1])
             while True:
                 t += 1
                 last_eval += 1
@@ -191,6 +192,7 @@ class QN(object):
                 # store the transition
                 replay_buffer.store_effect(idx, action, reward, done)
                 state = new_state
+                state = state.reshape([1, -1, 1])
 
                 # perform a training step
                 loss_eval, grad_eval = self.train_step(t, replay_buffer, lr_schedule.epsilon)
@@ -286,6 +288,7 @@ class QN(object):
         for i in range(num_episodes):
             total_reward = 0
             state = env.reset()
+            state = state.reshape([1, -1, 1])
             while True:
                 if self.config.render_test: env.render()
 
@@ -301,6 +304,7 @@ class QN(object):
                 # store in replay memory
                 replay_buffer.store_effect(idx, action, reward, done)
                 state = new_state
+                state = state.reshape([1, -1, 1])
 
                 # count reward
                 total_reward += reward

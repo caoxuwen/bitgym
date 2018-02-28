@@ -1,3 +1,4 @@
+import pandas as pd
 import tensorflow as tf
 import tensorflow.contrib.layers as layers
 
@@ -9,6 +10,7 @@ from q2_linear import Linear
 
 from configs.q3_nature import config
 
+import trading_env
 
 class NatureQN(Linear):
     """
@@ -73,7 +75,13 @@ class NatureQN(Linear):
 Use deep Q network for test environment.
 """
 if __name__ == '__main__':
-    env = EnvTest((80, 80, 1))
+    df = pd.read_csv('../../dataset/btc_indexed.csv')
+    env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
+                       df=df, fee=0.1, max_position=5, deal_col_name='close',
+                       return_transaction=False, max_steps=200,
+                       feature_names=['low', 'high','open','close', 'volume'])
+
+    env.reset()
 
     # exploration strategy
     exp_schedule = LinearExploration(env, config.eps_begin, 

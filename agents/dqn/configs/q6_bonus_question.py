@@ -4,7 +4,7 @@ class config():
     render_test      = False
     env_name         = "Pong-v0"
     overwrite_render = True
-    record           = True
+    record           = False
     high             = 255.
 
     # output config
@@ -29,9 +29,9 @@ class config():
     batch_size         = 32
     buffer_size        = 1000000
     target_update_freq = 10000
-    gamma              = 0.99
+    gamma              = 0.99999999
     learning_freq      = 4
-    state_history      = 4
+    state_history      = 50
     skip_frame         = 4
     lr_begin           = 0.00025
     lr_end             = 0.00005
