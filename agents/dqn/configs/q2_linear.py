@@ -29,7 +29,7 @@ class config():
     #gamma              = 0.99
     gamma              = 1
     learning_freq      = 4
-    state_history      = 4
+    state_history      = 50
     lr_begin           = 0.005
     lr_end             = 0.001
     lr_nsteps          = nsteps_train/2

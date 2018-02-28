@@ -56,10 +56,10 @@ class Linear(DQN):
         ##############################################################
         ################YOUR CODE HERE (6-15 lines) ##################
         state_shape[2] = config.state_history
-        self.s = tf.placeholder(tf.uint8, [None] + state_shape)
+        self.s = tf.placeholder(tf.float32, [None] + state_shape)
         self.a = tf.placeholder(tf.int32, [None])
         self.r = tf.placeholder(tf.float32, [None])
-        self.sp = tf.placeholder(tf.uint8, [None] + state_shape)
+        self.sp = tf.placeholder(tf.float32, [None] + state_shape)
         self.done_mask = tf.placeholder(tf.bool, [None])
         self.lr = tf.placeholder(tf.float32)
 
@@ -271,7 +271,7 @@ if __name__ == '__main__':
     df = pd.read_csv('../../dataset/btc_indexed.csv')
     env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
                        df=df, fee=0.1, max_position=5, deal_col_name='close',
-                       return_transaction=False,
+                       return_transaction=False, max_steps=200,
                        feature_names=['low', 'high','open','close', 'volume'])
 
     env.reset()
