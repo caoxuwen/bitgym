@@ -16,6 +16,7 @@ class Linear(DQN):
     """
     Implement Fully Connected with Tensorflow
     """
+
     def add_placeholders_op(self):
         """
         Adds placeholders to the graph
@@ -27,8 +28,7 @@ class Linear(DQN):
         # this information might be useful
         # here, typically, a state shape is (80, 80, 1)
         state_shape = list(self.env.observation_space)  # (1, #features, 1)
-
-
+        print state_shape
         ##############################################################
         """
         TODO: add placeholders:
@@ -69,7 +69,6 @@ class Linear(DQN):
         ##############################################################
         ######################## END YOUR CODE #######################
 
-
     def get_q_values_op(self, state, scope, reuse=False):
         """
         Returns Q values for all actions
@@ -108,13 +107,13 @@ class Linear(DQN):
         ################ YOUR CODE HERE - 2-3 lines ##################
         #print state
         flatten_state = layers.flatten(state)
-        out = layers.fully_connected(flatten_state, num_actions, None, scope=scope, reuse=reuse)
-        
+        out = layers.fully_connected(
+            flatten_state, num_actions, None, scope=scope, reuse=reuse)
+
         ##############################################################
         ######################## END YOUR CODE #######################
 
         return out
-
 
     def add_update_target_op(self, q_scope, target_q_scope):
         """
@@ -133,7 +132,7 @@ class Linear(DQN):
         what we need to do is to build a tf op, that, when called, will 
         assign all variables in the target network scope with the values of 
         the corresponding variables of the regular network scope.
-    
+
         Args:
             q_scope: (string) name of the scope of variables for q
             target_q_scope: (string) name of the scope of variables
@@ -159,13 +158,14 @@ class Linear(DQN):
         #print tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, target_q_scope)
         #print tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, q_scope)
         #self.update_target_op = tf.group(w, b)
-        vars_target_q = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, target_q_scope)
+        vars_target_q = tf.get_collection(
+            tf.GraphKeys.TRAINABLE_VARIABLES, target_q_scope)
         vars_q = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, q_scope)
-        self.update_target_op = tf.group(*[tf.assign(v_target, v) for v_target, v in zip(vars_target_q, vars_q)])
-        
+        self.update_target_op = tf.group(
+            *[tf.assign(v_target, v) for v_target, v in zip(vars_target_q, vars_q)])
+
         ##############################################################
         ######################## END YOUR CODE #######################
-
 
     def add_loss_op(self, q, target_q):
         """
@@ -204,13 +204,13 @@ class Linear(DQN):
         ##################### YOUR CODE HERE - 4-5 lines #############
 
         nodone = tf.subtract(1.0, tf.cast(self.done_mask, tf.float32))
-        q_samp = self.r + tf.multiply(nodone, self.config.gamma * tf.reduce_max(target_q, 1))
+        q_samp = self.r + \
+            tf.multiply(nodone, self.config.gamma * tf.reduce_max(target_q, 1))
         q_a = tf.reduce_sum(tf.multiply(tf.one_hot(self.a, num_actions), q), 1)
         self.loss = tf.losses.mean_squared_error(q_samp, q_a)
 
         ##############################################################
         ######################## END YOUR CODE #######################
-
 
     def add_optimizer_op(self, scope):
         """
@@ -244,19 +244,19 @@ class Linear(DQN):
         #################### YOUR CODE HERE - 8-12 lines #############
 
         optimizer = tf.train.AdamOptimizer(self.lr)
-        gvs = optimizer.compute_gradients(self.loss, tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope))
+        gvs = optimizer.compute_gradients(self.loss, tf.get_collection(
+            tf.GraphKeys.TRAINABLE_VARIABLES, scope))
         if self.config.grad_clip:
-          gvs = [(tf.clip_by_norm(grad, self.config.clip_val), var) for grad, var in gvs]
+            gvs = [(tf.clip_by_norm(grad, self.config.clip_val), var)
+                   for grad, var in gvs]
         self.train_op = optimizer.apply_gradients(gvs)
 
         self.grad_norm = tf.global_norm([grad for grad, _ in gvs])
 
-
         pass
-        
+
         ##############################################################
         ######################## END YOUR CODE #######################
-    
 
 
 if __name__ == '__main__':
@@ -273,21 +273,19 @@ if __name__ == '__main__':
 
     df = pd.read_csv('../../dataset/btc_indexed.csv')
     env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
-                       df=df, fee=0.1, max_position=5, deal_col_name='close',
-                       return_transaction=False, max_steps=200,
-                       feature_names=['low', 'high','open','close', 'volume'])
+                           df=df, fee=0.1, max_position=5, deal_col_name='close',
+                           return_transaction=False, max_steps=200,
+                           feature_names=['low', 'high', 'open', 'close', 'volume'])
 
     env.reset()
 
-
-
     # exploration strategy
-    exp_schedule = LinearExploration(env, config.eps_begin, 
-            config.eps_end, config.eps_nsteps)
+    exp_schedule = LinearExploration(env, config.eps_begin,
+                                     config.eps_end, config.eps_nsteps)
 
     # learning rate schedule
-    lr_schedule  = LinearSchedule(config.lr_begin, config.lr_end,
-            config.lr_nsteps)
+    lr_schedule = LinearSchedule(config.lr_begin, config.lr_end,
+                                 config.lr_nsteps)
 
     # train model
     model = Linear(env, config)
