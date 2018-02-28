@@ -28,7 +28,6 @@ class Linear(DQN):
         # this information might be useful
         # here, typically, a state shape is (80, 80, 1)
         state_shape = list(self.env.observation_space)  # (1, #features, 1)
-        print state_shape
         ##############################################################
         """
         TODO: add placeholders:
@@ -271,10 +270,10 @@ if __name__ == '__main__':
                        return_transaction=False, feature_names=['Open', 'High', 'Low', 'Close'])
     """
 
-    df = pd.read_csv('../../dataset/btc_indexed.csv')
+    df = pd.read_csv('../../dataset/btc_indexed2.csv')
     env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
                            df=df, fee=0.1, max_position=5, deal_col_name='close',
-                           return_transaction=False, max_steps=200,
+                           return_transaction=False, sample_days=7,
                            feature_names=['low', 'high', 'open', 'close', 'volume'])
 
     env.reset()

@@ -34,8 +34,6 @@ class trading_env:
         # feature_names -> list contain the feature columns to use in trading status.
         # ?day trade option set as default if don't use this need modify
         #
-        # max_steps: the maximum steps of an episode. This is a hack to terminate
-        #    the episode so that the current {D}QN agent works.
         """
         logging.basicConfig(level=logging.INFO,
                             format='[%(asctime)s] %(message)s')
@@ -75,9 +73,11 @@ class trading_env:
         self.sample_days = sample_days
 
     def _random_choice_section(self):
+        print "blah"
         random_int = np.random.randint(self.date_leng - self.sample_days-1)
         # because only 96 15min samples from a day, we lengthen it to a week
         pts = self.begin_fs.index[random_int: random_int+self.sample_days+1]
+        print pts
         df_section = self.df.iloc[pts[0]: pts[-1]]
         return df_section
 

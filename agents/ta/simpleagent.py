@@ -1,7 +1,7 @@
 import random
 import numpy as np
-import pandas as pd
 import trading_env
+import pandas as pd
 import talib
 import collections
 
@@ -111,19 +111,18 @@ class BBANDAgent:
         return 0
 
 
-agent = MAAgent()
-# agent = RSIAgent()
+#agent = MAAgent()
+agent = RSIAgent()
 # agent = BBANDAgent()
 
 df = pd.read_csv('dataset/btc_indexed2.csv')
 print(df.describe())
-train_len = 2000
 env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
-                       df=df, fee=0.015, max_position=5, max_steps = train_len, 
+                       df=df, fee=0.003, max_position=5, sample_days = 7, 
                        return_transaction=False, deal_col_name='close',
                        feature_names=['low', 'high',
                                       'open', 'close',
-                                      'volume', 'datetime'])
+                                      'volume'])
 env.reset()
 env.render()
 

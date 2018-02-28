@@ -49,6 +49,8 @@ class MyDQN(Linear):
         # this information might be useful
         num_actions = self.env.action_space.n
         out = state
+
+        print state.shape
         ##############################################################
         """
         TODO: implement the computation of Q values like in the paper
@@ -64,9 +66,9 @@ class MyDQN(Linear):
         ##############################################################
         ################ YOUR CODE HERE - 10-15 lines ################ 
         with tf.variable_scope(scope, reuse) as ts:
-          full1 = layers.fully_connected(inputs=layers.flatten(state), num_outputs=512)
-          full2 = layers.fully_connected(inputs=full1, num_outputs=512)
-          full3 = layers.fully_connected(inputs=full2, num_outputs=512)
+          full1 = layers.fully_connected(inputs=layers.flatten(state), num_outputs=256)
+          full2 = layers.fully_connected(inputs=full1, num_outputs=256)
+          full3 = layers.fully_connected(inputs=full2, num_outputs=256)
           out = layers.fully_connected(inputs=full3, num_outputs=num_actions, activation_fn=None)
         
         ##############################################################
@@ -101,9 +103,9 @@ Feel free to change the configuration. If so, please report your hyperparameters
 """
 if __name__ == '__main__':
     # make env
-    df = pd.read_csv('dataset/btc_indexed.csv')
+    df = pd.read_csv('dataset/btc_indexed2.csv')
     env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
-                       df=df, fee=0.1, max_position=5, deal_col_name='close',
+                       df=df, fee=0.003, max_position=5, deal_col_name='close',
                        return_transaction=False, sample_days=7,
                        feature_names=['low', 'high','open','close', 'volume'])
 

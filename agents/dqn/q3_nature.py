@@ -75,10 +75,10 @@ class NatureQN(Linear):
 Use deep Q network for test environment.
 """
 if __name__ == '__main__':
-    df = pd.read_csv('../../dataset/btc_indexed.csv')
+    df = pd.read_csv('dataset/btc_indexed2.csv')
     env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
                        df=df, fee=0.1, max_position=5, deal_col_name='close',
-                       return_transaction=False, max_steps=200,
+                       return_transaction=False, sample_days=7,
                        feature_names=['low', 'high','open','close', 'volume'])
 
     env.reset()
