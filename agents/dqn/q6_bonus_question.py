@@ -29,16 +29,17 @@ class MyDQN(Linear):
     write your own code.
 
     You may also try more recent approaches, like double Q learning
-    (see https://arxiv.org/pdf/1509.06461.pdf) or dueling networks 
+    (see https://arxiv.org/pdf/1509.06461.pdf) or dueling networks
     (see https://arxiv.org/abs/1511.06581), but this would be for extra
     extra bonus points.
     """
+
     def get_q_values_op(self, state, scope, reuse=False):
         """
         Returns Q values for all actions
 
         Args:
-            state: (tf tensor) 
+            state: (tf tensor)
                 shape = (batch_size, img height, img width, nchannels)
             scope: (string) scope name, that specifies if target network or not
             reuse: (bool) reuse of variables in the scope
@@ -64,13 +65,17 @@ class MyDQN(Linear):
               lasagne, cafe, etc.)
         """
         ##############################################################
-        ################ YOUR CODE HERE - 10-15 lines ################ 
+        ################ YOUR CODE HERE - 10-15 lines ################
         with tf.variable_scope(scope, reuse) as ts:
-          full1 = layers.fully_connected(inputs=layers.flatten(state), num_outputs=256)
-          full2 = layers.fully_connected(inputs=full1, num_outputs=256)
-          full3 = layers.fully_connected(inputs=full2, num_outputs=256)
-          out = layers.fully_connected(inputs=full3, num_outputs=num_actions, activation_fn=None)
-        
+            bn = tf.layers.batch_normalization(
+                inputs=layers.flatten(state))
+            full1 = layers.fully_connected(
+                bn, num_outputs=256)
+            full2 = layers.fully_connected(inputs=full1, num_outputs=256)
+            full3 = layers.fully_connected(inputs=full2, num_outputs=256)
+            out = layers.fully_connected(
+                inputs=full3, num_outputs=num_actions, activation_fn=None)
+
         ##############################################################
         ######################## END YOUR CODE #######################
         return out
@@ -105,21 +110,21 @@ if __name__ == '__main__':
     # make env
     df = pd.read_csv('dataset/btc_indexed2.csv')
     env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
-                       df=df, fee=0.003, max_position=5, deal_col_name='close',
-                       return_transaction=False, sample_days=7,
-                       feature_names=['low', 'high','open','close', 'volume'])
+                           df=df, fee=0.003, max_position=5, deal_col_name='close',
+                           return_transaction=False, sample_days=30,
+                           feature_names=['low', 'high', 'open', 'close', 'volume'])
 
     env.reset()
 
     # exploration strategy
     # you may want to modify this schedule
-    exp_schedule = LinearExploration(env, config.eps_begin, 
-            config.eps_end, config.eps_nsteps)
+    exp_schedule = LinearExploration(env, config.eps_begin,
+                                     config.eps_end, config.eps_nsteps)
 
     # you may want to modify this schedule
     # learning rate schedule
-    lr_schedule  = LinearSchedule(config.lr_begin, config.lr_end,
-            config.lr_nsteps)
+    lr_schedule = LinearSchedule(config.lr_begin, config.lr_end,
+                                 config.lr_nsteps)
 
     # train model
     model = MyDQN(env, config)

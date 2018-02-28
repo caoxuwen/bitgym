@@ -118,7 +118,7 @@ agent = RSIAgent()
 df = pd.read_csv('dataset/btc_indexed2.csv')
 print(df.describe())
 env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
-                       df=df, fee=0.003, max_position=5, sample_days = 7, 
+                       df=df, fee=0.003, max_position=5, sample_days = 30, 
                        return_transaction=False, deal_col_name='close',
                        feature_names=['low', 'high',
                                       'open', 'close',
@@ -130,11 +130,11 @@ state, reward, done, info = env.step(0)
 total_rewards = reward
 print state
 # randow choice action and show the transaction detail
-for i in range(2000):
+while True:
     state, reward, done, info = env.step(agent.choice_action(state[0]))
     print state.shape
     total_rewards += reward
-    print i, reward, total_rewards, done
+    print reward, total_rewards, done
     env.render()
     if done:
         break
