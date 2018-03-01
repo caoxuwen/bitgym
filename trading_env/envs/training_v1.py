@@ -134,6 +134,9 @@ class trading_env:
             self.obs_return= self.obs_state
 
         self.t_index= 0
+
+        # scale all value except volume
+        self.obs_return[:, :-1] = self.obs_return[:, :-1] / self.price[0] * 100.0;
         return self.obs_return
 
     def _long(self, open_posi, enter_price, current_mkt_position, current_price_mean):
@@ -292,7 +295,10 @@ class trading_env:
         else:
             self.obs_return= self.obs_state
 
-        return self.obs_return, 100*self.obs_reward.sum()/self.price[0], done, self.info
+        # scale all value except volume
+        self.obs_return[:, :-1] = self.obs_return[:, :-1] / self.price[0] * 100.0;
+
+        return self.obs_return, self.obs_reward.sum()/self.price[0], done, self.info
 
     def _gen_trade_color(self, ind, long_entry=(1, 0, 0, 0.5), long_cover=(1, 1, 1, 0.5),
                          short_entry=(0, 1, 0, 0.5), short_cover=(1, 1, 1, 0.5)):

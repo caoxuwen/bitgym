@@ -123,16 +123,15 @@ env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
                        feature_names=['low', 'high',
                                       'open', 'close',
                                       'volume'])
-env.reset()
+state = env.reset()
 env.render()
 
-state, reward, done, info = env.step(0)
-total_rewards = reward
 print state
+total_rewards = 0;
 # randow choice action and show the transaction detail
 while True:
     state, reward, done, info = env.step(agent.choice_action(state[0]))
-    print state.shape
+    print state
     total_rewards += reward
     print reward, total_rewards, done
     env.render()

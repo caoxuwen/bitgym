@@ -153,8 +153,8 @@ class QN(object):
         # initialize replay buffer and variables
         replay_buffer = ReplayBuffer(self.config.buffer_size, self.config.state_history)
         rewards = deque(maxlen=self.config.num_episodes_test)
-        max_q_values = deque(maxlen=1000)
-        q_values = deque(maxlen=1000)
+        max_q_values = deque(maxlen=2000)
+        q_values = deque(maxlen=2000)
         self.init_averages()
 
         t = last_eval = last_record = 0 # time control of nb of steps
