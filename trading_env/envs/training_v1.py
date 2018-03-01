@@ -45,7 +45,8 @@ class trading_env:
                                 1: 'long',
                                 2: 'short'}
         self.action_space = gym.spaces.Discrete(len(self.action_describe))
-
+        self.reward_range = reward_range = (-np.inf, np.inf)
+        self.metadata = {'render.modes': []}
         self.obs_len = obs_data_len
         self.feature_len = len(feature_names)
         self.observation_space = np.array([self.obs_len, self.feature_len, 1])

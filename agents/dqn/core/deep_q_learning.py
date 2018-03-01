@@ -47,25 +47,6 @@ class DQN(QN):
         """
         raise NotImplementedError
 
-
-    def process_state(self, state):
-        """
-        Processing of state
-
-        State placeholders are tf.uint8 for fast transfer to GPU
-        Need to cast it to float32 for the rest of the tf graph.
-
-        Args:
-            state: node of tf graph of shape = (batch_size, height, width, nchannels)
-                    of type tf.uint8.
-                    if , values are between 0 and 255 -> 0 and 1
-        """
-        state = tf.cast(state, tf.float32)
-        state /= self.config.high
-
-        return state
-
-
     def build(self):
         """
         Build model by adding all necessary variables
@@ -74,11 +55,11 @@ class DQN(QN):
         self.add_placeholders_op()
 
         # compute Q values of state
-        s = self.process_state(self.s)
+        s = self.s
         self.q = self.get_q_values_op(s, scope="q", reuse=False)
 
         # compute Q values of next state
-        sp = self.process_state(self.sp)
+        sp = self.sp
         self.target_q = self.get_q_values_op(sp, scope="target_q", reuse=False)
 
         # add update operator for target network

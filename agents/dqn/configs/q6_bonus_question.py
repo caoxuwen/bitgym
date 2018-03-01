@@ -5,7 +5,6 @@ class config():
     env_name         = "Pong-v0"
     overwrite_render = True
     record           = False
-    high             = 255.
 
     # output config
     output_path  = "results/q6_bonus_question/"

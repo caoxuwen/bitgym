@@ -58,8 +58,8 @@ class PreproWrapper(gym.Wrapper):
         self.overwrite_render = overwrite_render
         self.viewer = None
         self.prepro = prepro
-        self.observation_space = spaces.Box(low=0, high=high, shape=shape)
-        self.high = high
+        #self.observation_space = spaces.Box(low=0, high=high, shape=shape)
+        #self.high = high
 
 
     def _step(self, action):

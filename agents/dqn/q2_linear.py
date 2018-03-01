@@ -28,6 +28,7 @@ class Linear(DQN):
         # this information might be useful
         # here, typically, a state shape is (80, 80, 1)
         state_shape = list(self.env.observation_space)  # (1, #features, 1)
+        print state_shape
         ##############################################################
         """
         TODO: add placeholders:
