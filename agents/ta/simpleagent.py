@@ -112,29 +112,31 @@ class BBANDAgent:
 
 
 #agent = MAAgent()
-agent = RSIAgent()
-# agent = BBANDAgent()
+#agent = RSIAgent()
+agent = BBANDAgent()
 
 df = pd.read_csv('dataset/btc_indexed2.csv')
 print(df.describe())
 env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
-                       df=df, fee=0.003, max_position=5, sample_days = 30, 
+                       df=df, fee=0.003, max_position=5, sample_days = 7, 
                        return_transaction=False, deal_col_name='close',
                        feature_names=['low', 'high',
                                       'open', 'close',
                                       'volume'])
 state = env.reset()
-env.render()
+#env.render()
 
 print state
 total_rewards = 0;
 # randow choice action and show the transaction detail
 while True:
-    state, reward, done, info = env.step(agent.choice_action(state[0]))
+    action = agent.choice_action(state[0])
+    state, reward, done, info = env.step(action)
     print state
     total_rewards += reward
-    print reward, total_rewards, done
-    env.render()
+    if action != 0 or reward != 0.0:
+        print action, reward, total_rewards, done
+    #env.render()
     if done:
         break
 

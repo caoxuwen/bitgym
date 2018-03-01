@@ -1,3 +1,5 @@
+import time
+
 class config():
     # env config
     render_train     = False
@@ -7,7 +9,8 @@ class config():
     record           = False
 
     # output config
-    output_path  = "results/q7_prepro/"
+    millis = str(int(round(time.time() * 1000)))
+    output_path  = "results/q7_prepro_"+millis+"/"
     model_output = output_path + "model.weights/"
     log_path     = output_path + "log.txt"
     plot_output  = output_path + "scores.png"
@@ -15,7 +18,7 @@ class config():
 
     # model and training config
     num_episodes_test = 50
-    grad_clip         = True
+    grad_clip         = False
     clip_val          = 50
     saving_freq       = 250000
     log_freq          = 50
@@ -25,7 +28,7 @@ class config():
 
     # nature paper hyper params
     nsteps_train       = 5000000
-    batch_size         = 300
+    batch_size         = 32
     buffer_size        = 1000000
     target_update_freq = 10000
     gamma              = 1
