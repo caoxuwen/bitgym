@@ -20,7 +20,7 @@ class config():
 
     # model and training config
     num_episodes_test = 50
-    grad_clip         = False
+    grad_clip         = True
     clip_val          = 50
     saving_freq       = 250000
     log_freq          = 50
@@ -30,7 +30,7 @@ class config():
 
     # nature paper hyper params
     nsteps_train       = 5000000
-    batch_size         = 32
+    batch_size         = 128
     buffer_size        = 1000000
     target_update_freq = 10000
     gamma              = 1
