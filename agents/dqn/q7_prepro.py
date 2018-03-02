@@ -111,15 +111,17 @@ Feel free to change the configuration. If so, please report your hyperparameters
 if __name__ == '__main__':
     # make env
     df = pd.read_csv('dataset/btc_indexed2.csv')
+    print(df.describe())
+
     env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
-                           df=df, fee=0, max_position=5, deal_col_name='close',
+                           df=df, fee=0.003, max_position=5, deal_col_name='close',
                            return_transaction=False, sample_days=30,
                            feature_names=['low', 'high', 'open', 'close', 'volume'])
-    #env = PreproWrapper(env, prepro=priceNormalization, shape=(1, 5, 1),
+    # env = PreproWrapper(env, prepro=priceNormalization, shape=(1, 5, 1),
     #                    overwrite_render=False)
 
     env.reset()
-
+    env.render()
     # exploration strategy
     # you may want to modify this schedule
     exp_schedule = LinearExploration(env, config.eps_begin,
@@ -132,4 +134,5 @@ if __name__ == '__main__':
 
     # train model
     model = MyDQN(env, config)
-    model.run(exp_schedule, lr_schedule)
+    #model.run(exp_schedule, lr_schedule)
+    model.test()
