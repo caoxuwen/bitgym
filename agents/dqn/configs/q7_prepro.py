@@ -3,7 +3,7 @@ import time
 class config():
     # env config
     render_train     = False
-    render_test      = True
+    render_test      = False
     env_name         = "Pong-v0"
     overwrite_render = False
     record           = False
@@ -15,7 +15,7 @@ class config():
     log_path     = output_path + "log.txt"
     plot_output  = output_path + "scores.png"
     record_path  = output_path + "monitor/"
-    load_path = "results2/q7_prepro_1519945220941/model.weights/"
+    load_path = "results2/q7_prepro_1519931002457/model.weights/"
 
 
     # model and training config

@@ -121,7 +121,6 @@ if __name__ == '__main__':
     #                    overwrite_render=False)
 
     env.reset()
-    env.render()
     # exploration strategy
     # you may want to modify this schedule
     exp_schedule = LinearExploration(env, config.eps_begin,
@@ -134,5 +133,5 @@ if __name__ == '__main__':
 
     # train model
     model = MyDQN(env, config)
-    #model.run(exp_schedule, lr_schedule)
-    model.test()
+    model.run(exp_schedule, lr_schedule)
+    #model.test()
