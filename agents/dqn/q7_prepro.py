@@ -69,14 +69,14 @@ class MyDQN(Linear):
         ##############################################################
         ################ YOUR CODE HERE - 10-15 lines ################
         with tf.variable_scope(scope, reuse) as ts:
-            bn = tf.layers.batch_normalization(
+            x = tf.layers.batch_normalization(
                 inputs=layers.flatten(state))
-            full1 = layers.fully_connected(
-                bn, num_outputs=256)
-            full2 = layers.fully_connected(inputs=full1, num_outputs=256)
-            full3 = layers.fully_connected(inputs=full2, num_outputs=256)
+            x = layers.fully_connected(
+                x, num_outputs=256)
+            x = layers.fully_connected(inputs=x, num_outputs=256)
+            x = layers.fully_connected(inputs=x, num_outputs=256)
             out = layers.fully_connected(
-                inputs=full3, num_outputs=num_actions, activation_fn=None)
+                inputs=x, num_outputs=num_actions, activation_fn=None)
 
         ##############################################################
         ######################## END YOUR CODE #######################
@@ -110,12 +110,12 @@ Feel free to change the configuration. If so, please report your hyperparameters
 """
 if __name__ == '__main__':
     # make env
-    df = pd.read_csv('dataset/btc_indexed2.csv')
+    df = pd.read_csv('dataset/btc_test.csv')
     print(df.describe())
 
     env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
                            df=df, fee=0.003, max_position=5, deal_col_name='close',
-                           return_transaction=False, sample_days=30,
+                           return_transaction=True, sample_days=7,
                            feature_names=['low', 'high', 'open', 'close', 'volume'])
     # env = PreproWrapper(env, prepro=priceNormalization, shape=(1, 5, 1),
     #                    overwrite_render=False)

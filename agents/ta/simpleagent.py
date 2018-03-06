@@ -95,7 +95,7 @@ class BBANDAgent:
                                             timeperiod=20,
                                             nbdevup=2.0, nbdevdn=2.0,
                                             matype=talib.MA_Type.EMA)
-        print upper, lower, self.price_data
+        #print upper, lower, self.price_data
 
         upper = upper[-1]
         lower = lower[-1]
@@ -113,16 +113,16 @@ class BBANDAgent:
 
 if __name__ == '__main__':
     #agent = MAAgent()
-    #agent = RSIAgent()
-    agent = BBANDAgent()
+    agent = RSIAgent()
+    #agent = BBANDAgent()
 
     # make env
-    df = pd.read_csv('dataset/btc_indexed2.csv')
+    df = pd.read_csv('dataset/btc_test.csv')
     print(df.describe())
 
     env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
                            df=df, fee=0, max_position=5, deal_col_name='close',
-                           return_transaction=False, sample_days=30,
+                           return_transaction=True, sample_days=30,
                            feature_names=['low', 'high', 'open', 'close', 'volume'])
 
     state = env.reset()

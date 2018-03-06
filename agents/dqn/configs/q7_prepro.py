@@ -15,16 +15,16 @@ class config():
     log_path     = output_path + "log.txt"
     plot_output  = output_path + "scores.png"
     record_path  = output_path + "monitor/"
-    load_path = "results2/q7_prepro_1519931002457/model.weights/"
+    load_path = "results/q7_prepro_1520319956734/model.weights/"
 
 
     # model and training config
     num_episodes_test = 50
-    grad_clip         = True
+    grad_clip         = False
     clip_val          = 50
-    saving_freq       = 250000
+    saving_freq       = 100000
     log_freq          = 50
-    eval_freq         = 250000
+    eval_freq         = 100000
     record_freq       = 250000
     soft_epsilon      = 0.05
 

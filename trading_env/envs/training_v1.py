@@ -49,7 +49,10 @@ class trading_env:
         self.metadata = {'render.modes': []}
         self.obs_len = obs_data_len
         self.feature_len = len(feature_names)
-        self.observation_space = np.array([self.obs_len, self.feature_len, 1])
+        if return_transaction:
+            self.observation_space = np.array([self.obs_len, self.feature_len+8, 1])
+        else:
+            self.observation_space = np.array([self.obs_len, self.feature_len, 1])
         self.using_feature = feature_names
         self.price_name = deal_col_name
 
@@ -142,7 +145,8 @@ class trading_env:
         #print min_low, max_high, self.max_return
         
         # scale all value except volume
-        self.obs_return[:, :-1] = self.obs_return[:, :-1] / self.price[0] * 100.0;
+        #self.obs_return[:, :-1] = self.obs_return[:, :-1] / self.price[0] * 100.0;
+        #return self.obs_return
         return self.obs_return
 
     def _long(self, open_posi, enter_price, current_mkt_position, current_price_mean):
@@ -304,9 +308,10 @@ class trading_env:
         # scale rewards to correspond with volatility
 
         # scale all value except volume
-        self.obs_return[:, :-1] = self.obs_return[:, :-1] / self.price[0] * 100.0;
-
+        #self.obs_return[:, :-1] = self.obs_return[:, :-1] / self.price[0] * 100.0;
         return self.obs_return, self.obs_reward.sum()/self.max_return, done, self.info
+
+        #return self.obs_return, self.obs_reward.sum()/self.max_return, done, self.info
 
     def _gen_trade_color(self, ind, long_entry=(1, 0, 0, 0.5), long_cover=(1, 1, 1, 0.5),
                          short_entry=(0, 1, 0, 0.5), short_cover=(1, 1, 1, 0.5)):

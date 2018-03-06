@@ -110,15 +110,15 @@ class QN(object):
         """
         Defines extra attributes for tensorboard
         """
-        self.avg_reward = -21.
-        self.max_reward = -21.
+        self.avg_reward = 0.
+        self.max_reward = 0.
         self.std_reward = 0
 
         self.avg_q = 0
         self.max_q = 0
         self.std_q = 0
 
-        self.eval_reward = -21.
+        self.eval_reward = 0.
 
     def update_averages(self, rewards, max_q_values, q_values, scores_eval):
         """
@@ -331,18 +331,6 @@ class QN(object):
 
         return avg_reward
 
-    def record(self):
-        """
-        Re create an env and record a video for one episode
-        """
-        env = gym.make(self.config.env_name)
-        env = gym.wrappers.Monitor(
-            env, self.config.record_path, video_callable=lambda x: True, resume=True)
-        env = MaxAndSkipEnv(env, skip=self.config.skip_frame)
-        env = PreproWrapper(env, prepro=priceNormalization, shape=(80, 80, 1),
-                            overwrite_render=self.config.overwrite_render)
-        self.evaluate(env, 1)
-
     def run(self, exp_schedule, lr_schedule):
         """
         Apply procedures of training for a QN
@@ -354,16 +342,8 @@ class QN(object):
         # initialize
         self.initialize()
 
-        # record one game at the beginning
-        if self.config.record:
-            self.record()
-
         # model
         self.train(exp_schedule, lr_schedule)
-
-        # record one game at the end
-        if self.config.record:
-            self.record()
 
     def test(self):
         """
