@@ -111,32 +111,49 @@ class BBANDAgent:
         return 0
 
 
-#agent = MAAgent()
-agent = RSIAgent()
-# agent = BBANDAgent()
+if __name__ == '__main__':
+    #agent = MAAgent()
+    #agent = RSIAgent()
+    agent = BBANDAgent()
 
-df = pd.read_csv('dataset/btc_indexed2.csv')
-print(df.describe())
-env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
+    # make env
+    df = pd.read_csv('dataset/btc_indexed2.csv')
+    print(df.describe())
+
+    env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
+                           df=df, fee=0, max_position=5, deal_col_name='close',
+                           return_transaction=False, sample_days=30,
+                           feature_names=['low', 'high', 'open', 'close', 'volume'])
+
+    state = env.reset()
+    env.render()
+
+    """
+    df = pd.read_csv('dataset/btc_indexed2.csv')
+    print(df.describe())
+    env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
                        df=df, fee=0.003, max_position=5, sample_days = 30, 
                        return_transaction=False, deal_col_name='close',
                        feature_names=['low', 'high',
                                       'open', 'close',
                                       'volume'])
-state = env.reset()
-env.render()
-
-print state
-total_rewards = 0;
-# randow choice action and show the transaction detail
-while True:
-    state, reward, done, info = env.step(agent.choice_action(state[0]))
-    print state
-    total_rewards += reward
-    print reward, total_rewards, done
+    state = env.reset()
     env.render()
-    if done:
-        break
+    """
+
+    print state
+    total_rewards = 0
+    # randow choice action and show the transaction detail
+    while True:
+        action = agent.choice_action(state[0])
+        state, reward, done, info = env.step(action)
+        print state
+        total_rewards += reward
+        if action != 0 or reward != 0.0:
+            print action, reward, total_rewards, done
+        env.render()
+        if done:
+            break
 
 # state, reward, done, info = env.step(2)
 # print i,reward

@@ -135,6 +135,12 @@ class trading_env:
 
         self.t_index= 0
 
+        # scale rewards corresponding to best case
+        min_low = np.min(self.price)
+        max_high = np.max(self.price)
+        self.max_return = max_high - min_low
+        #print min_low, max_high, self.max_return
+        
         # scale all value except volume
         self.obs_return[:, :-1] = self.obs_return[:, :-1] / self.price[0] * 100.0;
         return self.obs_return
@@ -295,10 +301,12 @@ class trading_env:
         else:
             self.obs_return= self.obs_state
 
+        # scale rewards to correspond with volatility
+
         # scale all value except volume
         self.obs_return[:, :-1] = self.obs_return[:, :-1] / self.price[0] * 100.0;
 
-        return self.obs_return, self.obs_reward.sum()/self.price[0], done, self.info
+        return self.obs_return, self.obs_reward.sum()/self.max_return, done, self.info
 
     def _gen_trade_color(self, ind, long_entry=(1, 0, 0, 0.5), long_cover=(1, 1, 1, 0.5),
                          short_entry=(0, 1, 0, 0.5), short_cover=(1, 1, 1, 0.5)):

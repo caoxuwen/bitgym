@@ -10,9 +10,9 @@ class DQN(QN):
     """
     Abstract class for Deep Q Learning
     """
+
     def add_placeholders_op(self):
         raise NotImplementedError
-
 
     def get_q_values_op(self, scope, reuse=False):
         """
@@ -20,12 +20,11 @@ class DQN(QN):
         """
         raise NotImplementedError
 
-
     def add_update_target_op(self, q_scope, target_q_scope):
         """
-        Update_target_op will be called periodically 
+        Update_target_op will be called periodically
         to copy Q network to target Q network
-    
+
         Args:
             q_scope: name of the scope of variables for q
             target_q_scope: name of the scope of variables for the target
@@ -33,13 +32,11 @@ class DQN(QN):
         """
         raise NotImplementedError
 
-
     def add_loss_op(self, q, target_q):
         """
         Set (Q_target - Q)^2
         """
         raise NotImplementedError
-
 
     def add_optimizer_op(self, scope):
         """
@@ -71,7 +68,6 @@ class DQN(QN):
         # add optmizer for the main networks
         self.add_optimizer_op("q")
 
-
     def initialize(self):
         """
         Assumes the graph has been constructed
@@ -93,21 +89,27 @@ class DQN(QN):
         # for saving networks weights
         self.saver = tf.train.Saver()
 
-       
     def add_summary(self):
         """
         Tensorboard stuff
         """
         # extra placeholders to log stuff from python
-        self.avg_reward_placeholder = tf.placeholder(tf.float32, shape=(), name="avg_reward")
-        self.max_reward_placeholder = tf.placeholder(tf.float32, shape=(), name="max_reward")
-        self.std_reward_placeholder = tf.placeholder(tf.float32, shape=(), name="std_reward")
+        self.avg_reward_placeholder = tf.placeholder(
+            tf.float32, shape=(), name="avg_reward")
+        self.max_reward_placeholder = tf.placeholder(
+            tf.float32, shape=(), name="max_reward")
+        self.std_reward_placeholder = tf.placeholder(
+            tf.float32, shape=(), name="std_reward")
 
-        self.avg_q_placeholder  = tf.placeholder(tf.float32, shape=(), name="avg_q")
-        self.max_q_placeholder  = tf.placeholder(tf.float32, shape=(), name="max_q")
-        self.std_q_placeholder  = tf.placeholder(tf.float32, shape=(), name="std_q")
+        self.avg_q_placeholder = tf.placeholder(
+            tf.float32, shape=(), name="avg_q")
+        self.max_q_placeholder = tf.placeholder(
+            tf.float32, shape=(), name="max_q")
+        self.std_q_placeholder = tf.placeholder(
+            tf.float32, shape=(), name="std_q")
 
-        self.eval_reward_placeholder = tf.placeholder(tf.float32, shape=(), name="eval_reward")
+        self.eval_reward_placeholder = tf.placeholder(
+            tf.float32, shape=(), name="eval_reward")
 
         # add placeholders from the graph
         tf.summary.scalar("loss", self.loss)
@@ -123,13 +125,11 @@ class DQN(QN):
         tf.summary.scalar("Std Q", self.std_q_placeholder)
 
         tf.summary.scalar("Eval Reward", self.eval_reward_placeholder)
-            
+
         # logging
         self.merged = tf.summary.merge_all()
-        self.file_writer = tf.summary.FileWriter(self.config.output_path, 
+        self.file_writer = tf.summary.FileWriter(self.config.output_path,
                                                 self.sess.graph)
-
-
 
     def save(self):
         """
@@ -140,6 +140,11 @@ class DQN(QN):
 
         self.saver.save(self.sess, self.config.model_output)
 
+    def load(self):
+        """
+        Load session
+        """
+        self.saver.restore(self.sess, self.config.load_path)
 
     def get_best_action(self, state):
         """
