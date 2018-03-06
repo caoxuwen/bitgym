@@ -231,7 +231,6 @@ class QN(object):
             if (t > self.config.learning_start) and (last_eval > self.config.eval_freq):
                 # evaluate our policy
                 last_eval = 0
-                print("")
                 scores_eval += [self.evaluate()]
 
             if (t > self.config.learning_start) and self.config.record and (last_record > self.config.record_freq):

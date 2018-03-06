@@ -110,11 +110,16 @@ class BBANDAgent:
             return 1
         return 0
 
+class RandomAgent:
+    def choice_action(self, state):
+        return random.randrange(3)
+
 
 if __name__ == '__main__':
     #agent = MAAgent()
-    agent = RSIAgent()
+    #agent = RSIAgent()
     #agent = BBANDAgent()
+    agent = RandomAgent()
 
     # make env
     df = pd.read_csv('dataset/btc_test.csv')
@@ -122,7 +127,7 @@ if __name__ == '__main__':
 
     env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
                            df=df, fee=0, max_position=5, deal_col_name='close',
-                           return_transaction=True, sample_days=30,
+                           return_transaction=True, sample_days=7,
                            feature_names=['low', 'high', 'open', 'close', 'volume'])
 
     state = env.reset()
@@ -149,8 +154,8 @@ if __name__ == '__main__':
         state, reward, done, info = env.step(action)
         print state
         total_rewards += reward
-        if action != 0 or reward != 0.0:
-            print action, reward, total_rewards, done
+        #if action != 0 or reward != 0.0:
+        print action, reward, total_rewards, done
         env.render()
         if done:
             break
