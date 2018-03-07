@@ -110,7 +110,7 @@ Feel free to change the configuration. If so, please report your hyperparameters
 """
 if __name__ == '__main__':
     # make env
-    df = pd.read_csv('dataset/btc_test.csv')
+    df = pd.read_csv('dataset/btc_indexed2.csv')
     print(df.describe())
 
     env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,

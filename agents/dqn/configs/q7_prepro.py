@@ -15,7 +15,7 @@ class config():
     log_path     = output_path + "log.txt"
     plot_output  = output_path + "scores.png"
     record_path  = output_path + "monitor/"
-    load_path = "results/q7_prepro_1520319956734/model.weights/"
+    load_path = "results2/prepro_rewards2/"
 
 
     # model and training config

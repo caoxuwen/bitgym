@@ -139,9 +139,11 @@ class trading_env:
         self.t_index= 0
 
         # scale rewards corresponding to best case
-        min_low = np.min(self.price)
-        max_high = np.max(self.price)
-        self.max_return = max_high - min_low
+        #min_low = np.min(self.price)
+        #max_high = np.max(self.price)
+        # scale rewards corresponding to average price
+        self.avg_price = np.average(self.price)
+
         #print min_low, max_high, self.max_return
         self.new_reward = self.obs_reward.sum() + self.obs_reward_fluctuant.sum()
 
@@ -312,7 +314,7 @@ class trading_env:
         delta_reward = self.obs_reward.sum() + self.obs_reward_fluctuant.sum() - self.new_reward
         self.new_reward += delta_reward
         #self.obs_return[:, :-1] = self.obs_return[:, :-1] / self.price[0] * 100.0;
-        return self.obs_return, delta_reward, done, self.info
+        return self.obs_return, delta_reward / self.avg_price, done, self.info
 
         #return self.obs_return, self.obs_reward.sum()/self.max_return, done, self.info
 
