@@ -2,13 +2,14 @@ import gym
 
 import tensorflow as tf
 import tensorflow.contrib.layers as layers
+from tensorflow.contrib import rnn
 
 from utils.general import get_logger
 from q1_schedule import LinearExploration, LinearSchedule
 from q2_linear import Linear
 from utils.wrappers import PreproWrapper
 from utils.preprocess import priceNormalization
-
+import numpy as np
 from configs.q7_prepro import config
 import pandas as pd
 import trading_env
@@ -68,6 +69,7 @@ class MyDQN(Linear):
         """
         ##############################################################
         ################ YOUR CODE HERE - 10-15 lines ################
+        """
         with tf.variable_scope(scope, reuse) as ts:
             x = tf.layers.batch_normalization(
                 inputs=layers.flatten(state))
@@ -77,13 +79,31 @@ class MyDQN(Linear):
             x = layers.fully_connected(inputs=x, num_outputs=256)
             out = layers.fully_connected(
                 inputs=x, num_outputs=num_actions, activation_fn=None)
-
+        """
+        #print "state", state, tf.shape(state)
+        with tf.variable_scope(scope, reuse) as ts:
+            lstm_cell = rnn.BasicLSTMCell(64, forget_bias=1.0)
+            obs_space = list(self.env.observation_space)
+            #print "obs_space", obs_space
+            x = tf.reshape(
+                state, (tf.shape(state)[0], obs_space[1], config.state_history))
+            #x = tf.squeeze(state)
+            #print "x", x.shape
+            #[None, 13, 50]
+            x = tf.unstack(x, axis=2)
+            #print "x", len(x)
+            x, states = rnn.static_rnn(
+                lstm_cell, x, dtype=tf.float32)
+            out = layers.fully_connected(
+                inputs=x[-1], num_outputs=num_actions, activation_fn=None)
         ##############################################################
         ######################## END YOUR CODE #######################
         return out
 
 
 """
+
+
 Use deep Q network for test environment.
 """
 """
@@ -91,11 +111,11 @@ if __name__ == '__main__':
     env = EnvTest((80, 80, 1))
 
     # exploration strategy
-    exp_schedule = LinearExploration(env, config.eps_begin, 
+    exp_schedule = LinearExploration(env, config.eps_begin,
             config.eps_end, config.eps_nsteps)
 
     # learning rate schedule
-    lr_schedule  = LinearSchedule(config.lr_begin, config.lr_end,
+    lr_schedule = LinearSchedule(config.lr_begin, config.lr_end,
             config.lr_nsteps)
 
     # train model

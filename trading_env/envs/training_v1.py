@@ -50,7 +50,7 @@ class trading_env:
         self.obs_len = obs_data_len
         self.feature_len = len(feature_names)
         if return_transaction:
-            self.observation_space = np.array([self.obs_len, self.feature_len+8, 1])
+            self.observation_space = np.array([self.obs_len, (self.feature_len+8), 1])
         else:
             self.observation_space = np.array([self.obs_len, self.feature_len, 1])
         self.using_feature = feature_names
