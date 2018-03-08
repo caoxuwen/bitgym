@@ -15,11 +15,11 @@ class config():
     log_path     = output_path + "log.txt"
     plot_output  = output_path + "scores.png"
     record_path  = output_path + "monitor/"
-    load_path = "results2/prepro_rewards2/"
+    load_path = "results2/prepro_rewards_change2/"
 
 
     # model and training config
-    num_episodes_test = 50
+    num_episodes_test = 5
     grad_clip         = False
     clip_val          = 50
     saving_freq       = 100000
@@ -30,12 +30,12 @@ class config():
 
     # nature paper hyper params
     nsteps_train       = 5000000
-    batch_size         = 128
+    batch_size         = 32
     buffer_size        = 1000000
     target_update_freq = 10000
     gamma              = 1
     learning_freq      = 4
-    state_history      = 50
+    state_history      = 100
     skip_frame         = 4
     lr_begin           = 0.00025
     lr_end             = 0.00005

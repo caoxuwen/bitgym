@@ -82,7 +82,7 @@ class MyDQN(Linear):
         """
         #print "state", state, tf.shape(state)
         with tf.variable_scope(scope, reuse) as ts:
-            lstm_cell = rnn.BasicLSTMCell(64, forget_bias=1.0)
+            lstm_cell = rnn.BasicLSTMCell(32, forget_bias=1.0)
             obs_space = list(self.env.observation_space)
             #print "obs_space", obs_space
             x = tf.reshape(

@@ -7,7 +7,7 @@ from utils.general import get_logger
 from core.deep_q_learning import DQN
 from q1_schedule import LinearExploration, LinearSchedule
 
-from configs.q2_linear import config
+from configs.q7_prepro import config
 
 import trading_env
 
