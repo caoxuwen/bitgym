@@ -17,6 +17,7 @@ class trading_env:
                  feature_names=['price', 'volume'],
                  return_transaction=True, normalize_reward = False,
                  fluc_div=100.0, gameover_limit=5, sample_days=7,
+                 test_env=None,
                  *args, **kwargs):
         """
         # assert df
@@ -76,6 +77,7 @@ class trading_env:
         self.current_step = 0  # =self.t_index?
         self.sample_days = sample_days
         self.normalize_reward = normalize_reward
+        self.test_env = test_env
 
     def _random_choice_section(self):
         random_int = np.random.randint(self.date_leng - self.sample_days-1)

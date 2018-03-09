@@ -161,7 +161,7 @@ class QN(object):
 
         t = last_eval = last_record = 0  # time control of nb of steps
         scores_eval = []  # list of scores computed at iteration time
-        scores_eval += [self.evaluate()]
+        scores_eval += [self.evaluate(self.env.test_env)]
 
         prog = Progbar(target=self.config.nsteps_train)
 
@@ -231,7 +231,7 @@ class QN(object):
             if (t > self.config.learning_start) and (last_eval > self.config.eval_freq):
                 # evaluate our policy
                 last_eval = 0
-                scores_eval += [self.evaluate()]
+                scores_eval += [self.evaluate(self.env.test_env)]
 
             if (t > self.config.learning_start) and self.config.record and (last_record > self.config.record_freq):
                 self.logger.info("Recording...")
@@ -241,7 +241,7 @@ class QN(object):
         # last words
         self.logger.info("- Training done.")
         self.save()
-        scores_eval += [self.evaluate()]
+        scores_eval += [self.evaluate(self.env.test_env)]
         export_plot(scores_eval, "Scores", self.config.plot_output)
 
     def train_step(self, t, replay_buffer, lr):
@@ -353,4 +353,4 @@ class QN(object):
         self.initialize()
 
         self.load()
-        self.evaluate(self.env, num_episodes=1)
+        self.evaluate(self.env.test_env, num_episodes=1)
