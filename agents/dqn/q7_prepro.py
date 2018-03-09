@@ -135,7 +135,7 @@ if __name__ == '__main__':
 
     env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
                            df=df, fee=0.003, max_position=5, deal_col_name='close',
-                           return_transaction=True, sample_days=30,
+                           return_transaction=True, sample_days=30, normalize_reward=True,
                            feature_names=['low', 'high', 'open', 'close', 'volume'])
     # env = PreproWrapper(env, prepro=priceNormalization, shape=(1, 5, 1),
     #                    overwrite_render=False)
@@ -153,5 +153,5 @@ if __name__ == '__main__':
 
     # train model
     model = MyDQN(env, config)
-    #model.run(exp_schedule, lr_schedule)
-    model.test()
+    model.run(exp_schedule, lr_schedule)
+    #model.test()

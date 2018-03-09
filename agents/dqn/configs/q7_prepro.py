@@ -3,7 +3,7 @@ import time
 class config():
     # env config
     render_train     = False
-    render_test      = True
+    render_test      = False
     env_name         = "Pong-v0"
     overwrite_render = False
     record           = False

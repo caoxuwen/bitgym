@@ -146,7 +146,8 @@ class trading_env:
         self.avg_price = np.average(self.price)
 
         #print min_low, max_high, self.max_return
-        self.new_reward = self.obs_reward.sum() + self.obs_reward_fluctuant.sum()
+        self.total_realized_reward = self.obs_reward.sum()
+        self.total_new_reward = self.total_realized_reward + self.obs_reward_fluctuant.sum()
 
         # scale all value except volume
         #self.obs_return[:, :-1] = self.obs_return[:, :-1] / self.price[0] * 100.0;
@@ -315,10 +316,15 @@ class trading_env:
         #delta_reward = self.obs_reward.sum() + self.obs_reward_fluctuant.sum() - self.new_reward
         #self.new_reward += delta_reward
         #self.obs_return[:, :-1] = self.obs_return[:, :-1] / self.price[0] * 100.0;
+
+        self.total_realized_reward += self.obs_reward.sum()
+        delta_reward = self.total_realized_reward + self.obs_reward_fluctuant.sum() - self.total_new_reward
+        self.total_new_reward = self.total_realized_reward + self.obs_reward_fluctuant.sum()
+
         if self.normalize_reward:
-          return self.obs_return, self.obs_reward.sum() / self.avg_price, done, self.info
+          return self.obs_return, delta_reward / self.avg_price, done, self.info
         else:
-          return self.obs_return, self.obs_reward.sum(), done, self.info
+          return self.obs_return, delta_reward, done, self.info
         #return self.obs_return, self.obs_reward.sum()/self.max_return, done, self.info
 
     def _gen_trade_color(self, ind, long_entry=(1, 0, 0, 0.5), long_cover=(1, 1, 1, 0.5),
