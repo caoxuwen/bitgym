@@ -15,7 +15,7 @@ class trading_env:
     def __init__(self, env_id, obs_data_len, step_len,
                  df, fee, max_position=5, deal_col_name='price',
                  feature_names=['price', 'volume'],
-                 return_transaction=True,
+                 return_transaction=True, normalize_reward = False,
                  fluc_div=100.0, gameover_limit=5, sample_days=7,
                  *args, **kwargs):
         """
@@ -75,6 +75,7 @@ class trading_env:
 
         self.current_step = 0  # =self.t_index?
         self.sample_days = sample_days
+        self.normalize_reward = normalize_reward
 
     def _random_choice_section(self):
         random_int = np.random.randint(self.date_leng - self.sample_days-1)
@@ -314,8 +315,10 @@ class trading_env:
         #delta_reward = self.obs_reward.sum() + self.obs_reward_fluctuant.sum() - self.new_reward
         #self.new_reward += delta_reward
         #self.obs_return[:, :-1] = self.obs_return[:, :-1] / self.price[0] * 100.0;
-        return self.obs_return, self.obs_reward.sum() / self.avg_price, done, self.info
-
+        if self.normalize_reward:
+          return self.obs_return, self.obs_reward.sum() / self.avg_price, done, self.info
+        else:
+          return self.obs_return, self.obs_reward.sum(), done, self.info
         #return self.obs_return, self.obs_reward.sum()/self.max_return, done, self.info
 
     def _gen_trade_color(self, ind, long_entry=(1, 0, 0, 0.5), long_cover=(1, 1, 1, 0.5),
