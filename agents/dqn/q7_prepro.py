@@ -82,7 +82,7 @@ class MyDQN(Linear):
         """
         #print "state", state, tf.shape(state)
         with tf.variable_scope(scope, reuse) as ts:
-            lstm_cell = rnn.BasicLSTMCell(32, forget_bias=1.0)
+            lstm_cell = rnn.BasicLSTMCell(64, forget_bias=1.0)
             obs_space = list(self.env.observation_space)
             #print "obs_space", obs_space
             x = tf.reshape(
@@ -130,7 +130,7 @@ Feel free to change the configuration. If so, please report your hyperparameters
 """
 if __name__ == '__main__':
     # make env
-    df = pd.read_csv('dataset/btc_indexed2.csv')
+    df = pd.read_csv('dataset/btc_test.csv')
     print(df.describe())
 
     env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
@@ -153,5 +153,5 @@ if __name__ == '__main__':
 
     # train model
     model = MyDQN(env, config)
-    model.run(exp_schedule, lr_schedule)
-    #model.test()
+    #model.run(exp_schedule, lr_schedule)
+    model.test()

@@ -306,7 +306,8 @@ class QN(object):
 
                 # perform action in env
                 new_state, reward, done, info = env.step(action)
-
+                print new_state
+                print action, reward
                 # store in replay memory
                 replay_buffer.store_effect(idx, action, reward, done)
                 state = new_state
@@ -314,6 +315,7 @@ class QN(object):
 
                 # count reward
                 total_reward += reward
+                print total_reward
                 if done:
                     break
 

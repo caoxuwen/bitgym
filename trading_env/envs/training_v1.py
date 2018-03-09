@@ -311,10 +311,10 @@ class trading_env:
         # scale rewards to correspond with volatility
 
         # scale all value except volume
-        delta_reward = self.obs_reward.sum() + self.obs_reward_fluctuant.sum() - self.new_reward
-        self.new_reward += delta_reward
+        #delta_reward = self.obs_reward.sum() + self.obs_reward_fluctuant.sum() - self.new_reward
+        #self.new_reward += delta_reward
         #self.obs_return[:, :-1] = self.obs_return[:, :-1] / self.price[0] * 100.0;
-        return self.obs_return, delta_reward / self.avg_price, done, self.info
+        return self.obs_return, self.obs_reward.sum() / self.avg_price, done, self.info
 
         #return self.obs_return, self.obs_reward.sum()/self.max_return, done, self.info
 
