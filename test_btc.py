@@ -8,7 +8,7 @@ import trading_env
 df = pd.read_csv('dataset/btc_indexed2.csv')
 print(df.describe())
 
-env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
+env = trading_env.make(env_id='training_v1', obs_data_len=50, step_len=1,
                        df=df, fee=0.1, max_position=5, deal_col_name='close', 
                        feature_names=['low', 'high', 
                                       'open','close', 
