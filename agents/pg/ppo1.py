@@ -29,7 +29,7 @@ def train(training_env, num_timesteps, evaluation_env = None):
     #training_env.close()
 
 def main():
-    df = pd.read_csv('../../bitgym/dataset/btc_indexed2.csv')
+    df = pd.read_csv('dataset/btc_indexed2.csv')
     env = trading_env.make(env_id='training_v1', obs_data_len=50, step_len=1,
                            df=df, fee=0.003, max_position=5, deal_col_name='close',
                            return_transaction=True, sample_days=30, normalize_reward = True,
