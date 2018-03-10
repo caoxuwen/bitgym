@@ -43,7 +43,7 @@ def train(num_timesteps, seed):
     #policy = MlpPolicy
     policy = LstmPolicy
     ppo2.learn(policy=policy, env=env, nsteps=100, nminibatches=8,
-        lam=0.95, gamma=1.0, noptepochs=10, log_interval=1,
+        lam=0.95, gamma=1.0, noptepochs=10, log_interval=1, save_interval=10,
         ent_coef=0.0,
         lr=3e-4,
         cliprange=0.2,

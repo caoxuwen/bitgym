@@ -12,7 +12,6 @@ from baselines.common import tf_util as U
 from baselines import logger
 import pandas as pd
 import trading_env
-
 import wrapper
 
 def train(training_env, num_timesteps, evaluation_env = None):
