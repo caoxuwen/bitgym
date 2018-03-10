@@ -3,6 +3,10 @@
 # Modified from OpenAI baseline ppo1/run_mjoco.py
 # Need OpenAI baseline.
 # Need mpi4py.
+# IMPORTANT: Need flatten input of the policy network in
+#     OpenAI baslines/ppo1/mlp_policy.py.
+#     last_out = tf.contrib.layers.flatten(obz)
+#   when the env observation length > 1.
 
 from baselines.common import tf_util as U
 from baselines import logger
