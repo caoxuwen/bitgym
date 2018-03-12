@@ -71,35 +71,38 @@ class MyDQN(Linear):
         ################ YOUR CODE HERE - 10-15 lines ################
         """
         with tf.variable_scope(scope, reuse) as ts:
-            x = tf.layers.batch_normalization(
-                inputs=layers.flatten(state))
-            x = layers.fully_connected(
-                x, num_outputs=256)
+            x = tf.layers.batch_normalization(inputs=layers.flatten(state))
+            x = layers.fully_connected(x, num_outputs=256)
+            x = tf.layers.batch_normalization(inputs=x)
             x = layers.fully_connected(inputs=x, num_outputs=256)
+            x = tf.layers.batch_normalization(inputs=x)
             x = layers.fully_connected(inputs=x, num_outputs=256)
+            x = tf.layers.batch_normalization(inputs=x)
             out = layers.fully_connected(
                 inputs=x, num_outputs=num_actions, activation_fn=None)
         """
-        #print "state", state, tf.shape(state)
+
+        #"""        
+        # print "state", state, tf.shape(state)
         with tf.variable_scope(scope, reuse) as ts:
             lstm_cell = rnn.BasicLSTMCell(64, forget_bias=1.0)
-            obs_space = list(self.env.observation_space)
-            #print "obs_space", obs_space
+            obs_space = self.env.observation_space.shape
+            # print "obs_space", obs_space
             x = tf.reshape(
                 state, (tf.shape(state)[0], obs_space[1], config.state_history))
-            #x = tf.squeeze(state)
-            #print "x", x.shape
+            # x = tf.squeeze(state)
+            # print "x", x.shape
             #[None, 13, 50]
             x = tf.unstack(x, axis=2)
-            #print "x", len(x)
+            # print "x", len(x)
             x, states = rnn.static_rnn(
                 lstm_cell, x, dtype=tf.float32)
             out = layers.fully_connected(
                 inputs=x[-1], num_outputs=num_actions, activation_fn=None)
+        #"""
         ##############################################################
         ######################## END YOUR CODE #######################
         return out
-
 
 """
 
@@ -135,12 +138,12 @@ if __name__ == '__main__':
 
     test_env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
                            df=pd.read_csv('dataset/btc_indexed2_test.csv'), fee=0.003, max_position=5, deal_col_name='close',
-                           return_transaction=True, sample_days=30, normalize_reward=True,
+                           return_transaction=True, sample_days=30, normalize_price=True,
                            feature_names=['low', 'high', 'open', 'close', 'volume'])
 
     env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
                            df=df, fee=0.003, max_position=5, deal_col_name='close',
-                           return_transaction=True, sample_days=30, normalize_reward=True,
+                           return_transaction=True, sample_days=30, normalize_price=True,
                            feature_names=['low', 'high', 'open', 'close', 'volume'], test_env=test_env)
     # env = PreproWrapper(env, prepro=priceNormalization, shape=(1, 5, 1),
     #                    overwrite_render=False)
@@ -159,4 +162,4 @@ if __name__ == '__main__':
     # train model
     model = MyDQN(env, config)
     model.run(exp_schedule, lr_schedule)
-    #model.test()
+    # model.test()

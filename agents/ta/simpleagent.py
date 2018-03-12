@@ -127,7 +127,7 @@ if __name__ == '__main__':
 
     env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
                            df=df, fee=0, max_position=5, deal_col_name='close',
-                           return_transaction=True, sample_days=7,
+                           return_transaction=True, sample_days=7, normalize_price=True,
                            feature_names=['low', 'high', 'open', 'close', 'volume'])
 
     state = env.reset()
