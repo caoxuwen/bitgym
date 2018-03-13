@@ -70,6 +70,7 @@ class MyDQN(Linear):
         ##############################################################
         ################ YOUR CODE HERE - 10-15 lines ################
         """
+        # dense
         with tf.variable_scope(scope, reuse) as ts:
             x = tf.layers.batch_normalization(inputs=layers.flatten(state))
             x = layers.fully_connected(x, num_outputs=256)
@@ -82,8 +83,24 @@ class MyDQN(Linear):
                 inputs=x, num_outputs=num_actions, activation_fn=None)
         """
 
-        #"""        
-        # print "state", state, tf.shape(state)
+        # CNN
+        obs_space = self.env.observation_space.shape
+        with tf.variable_scope(scope, reuse) as ts:
+            x = tf.reshape(
+                state, (tf.shape(state)[0], obs_space[1], config.state_history, 1))
+            x = layers.batch_normalization(inputs=x)
+            x = layers.conv2d(x, 32, 5, activation=tf.nn.relu)
+            x = layers.max_pooling2d(x, 2, 2)
+            x = layers.conv2d(x, 64, 3, activation=tf.nn.relu)
+            x = layers.max_pooling2d(x, 2, 2)
+            x = layers.flatten(x)
+            x = layers.batch_normalization(inputs=x)
+            x = layers.fully_connected(inputs=x, num_outputs=256)
+            out = layers.fully_connected(
+                inputs=x, num_outputs=num_actions, activation_fn=None)
+
+        """
+        # LSTM
         with tf.variable_scope(scope, reuse) as ts:
             lstm_cell = rnn.BasicLSTMCell(64, forget_bias=1.0)
             obs_space = self.env.observation_space.shape
@@ -99,10 +116,11 @@ class MyDQN(Linear):
                 lstm_cell, x, dtype=tf.float32)
             out = layers.fully_connected(
                 inputs=x[-1], num_outputs=num_actions, activation_fn=None)
-        #"""
+        """
         ##############################################################
         ######################## END YOUR CODE #######################
         return out
+
 
 """
 
@@ -137,9 +155,9 @@ if __name__ == '__main__':
     print(df.describe())
 
     test_env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
-                           df=pd.read_csv('dataset/btc_indexed2_test.csv'), fee=0.003, max_position=5, deal_col_name='close',
-                           return_transaction=True, sample_days=30, normalize_price=True,
-                           feature_names=['low', 'high', 'open', 'close', 'volume'])
+                                df=pd.read_csv('dataset/btc_indexed2_test.csv'), fee=0.003, max_position=5, deal_col_name='close',
+                                return_transaction=True, sample_days=30, normalize_price=True,
+                                feature_names=['low', 'high', 'open', 'close', 'volume'])
 
     env = trading_env.make(env_id='training_v1', obs_data_len=1, step_len=1,
                            df=df, fee=0.003, max_position=5, deal_col_name='close',

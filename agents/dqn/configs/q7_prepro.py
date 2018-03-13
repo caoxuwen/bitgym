@@ -15,7 +15,7 @@ class config():
     log_path     = output_path + "log.txt"
     plot_output  = output_path + "scores.png"
     record_path  = output_path + "monitor/"
-    load_path = "results2/lstm_50/"
+    load_path = "results2/lstm_50_price_norm/"
 
 
     # model and training config
