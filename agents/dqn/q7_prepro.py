@@ -88,13 +88,13 @@ class MyDQN(Linear):
         with tf.variable_scope(scope, reuse) as ts:
             x = tf.reshape(
                 state, (tf.shape(state)[0], obs_space[1], config.state_history, 1))
-            x = layers.batch_normalization(inputs=x)
-            x = layers.conv2d(x, 32, 5, activation=tf.nn.relu)
-            x = layers.max_pooling2d(x, 2, 2)
-            x = layers.conv2d(x, 64, 3, activation=tf.nn.relu)
-            x = layers.max_pooling2d(x, 2, 2)
+            x = tf.layers.batch_normalization(inputs=x)
+            x = tf.layers.conv2d(x, 32, 5, activation=tf.nn.relu)
+            x = tf.layers.max_pooling2d(x, 2, 2)
+            x = tf.layers.conv2d(x, 64, 3, activation=tf.nn.relu)
+            x = tf.layers.max_pooling2d(x, 2, 2)
             x = layers.flatten(x)
-            x = layers.batch_normalization(inputs=x)
+            x = tf.layers.batch_normalization(inputs=x)
             x = layers.fully_connected(inputs=x, num_outputs=256)
             out = layers.fully_connected(
                 inputs=x, num_outputs=num_actions, activation_fn=None)
