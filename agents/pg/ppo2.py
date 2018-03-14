@@ -2,6 +2,7 @@
 
 # Modified from OpenAI baseline ppo2/run_mujoco.py
 # Need OpenAI baseline.
+#   openai/baselines/ppo2/ppo2.learn needs to return the trained policy.
 
 import argparse
 import gym
