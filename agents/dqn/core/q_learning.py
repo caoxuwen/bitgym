@@ -353,4 +353,4 @@ class QN(object):
         self.initialize()
 
         self.load()
-        self.evaluate(self.env.test_env, num_episodes=1)
+        self.evaluate(self.env.test_env, num_episodes=50)

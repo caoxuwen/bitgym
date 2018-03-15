@@ -16,7 +16,7 @@ class trading_env:
                  df, fee, max_position=5, deal_col_name='price',
                  feature_names=['price', 'volume'],
                  return_transaction=True, normalize_price=False,
-                 normalize_reward=False,
+                 normalize_reward=False, reward_delta=True,
                  fluc_div=100.0, gameover_limit=5, sample_days=7,
                  test_env=None,
                  *args, **kwargs):
@@ -83,6 +83,7 @@ class trading_env:
         self.sample_days = sample_days
         self.normalize_reward = normalize_reward
         self.normalize_price = normalize_price
+        self.reward_delta = reward_delta
         self.test_env = test_env
 
     def _random_choice_section(self):
@@ -335,11 +336,16 @@ class trading_env:
         delta_reward = self.total_realized_reward + \
             self.obs_reward_fluctuant.sum() - self.total_new_reward
         self.total_new_reward = self.total_realized_reward + self.obs_reward_fluctuant.sum()
-
-        if self.normalize_reward:
-            return self.obs_return, delta_reward / self.avg_price, done, self.info
+        if self.reward_delta:
+            if self.normalize_reward:
+                return self.obs_return, delta_reward / self.avg_price, done, self.info
+            else:
+                return self.obs_return, delta_reward, done, self.info
         else:
-            return self.obs_return, delta_reward, done, self.info
+            if self.normalize_reward:
+                return self.obs_return, self.obs_reward[-1] / self.avg_price, done, self.info
+            else:
+                return self.obs_return, self.obs_reward[-1], done, self.info
         # return self.obs_return, self.obs_reward.sum()/self.max_return, done, self.info
 
     def _gen_trade_color(self, ind, long_entry=(1, 0, 0, 0.5), long_cover=(1, 1, 1, 0.5),

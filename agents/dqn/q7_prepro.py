@@ -83,6 +83,7 @@ class MyDQN(Linear):
                 inputs=x, num_outputs=num_actions, activation_fn=None)
         """
 
+        #"""
         # CNN
         obs_space = self.env.observation_space.shape
         with tf.variable_scope(scope, reuse) as ts:
@@ -98,7 +99,7 @@ class MyDQN(Linear):
             x = layers.fully_connected(inputs=x, num_outputs=256)
             out = layers.fully_connected(
                 inputs=x, num_outputs=num_actions, activation_fn=None)
-
+        #"""
         """
         # LSTM
         with tf.variable_scope(scope, reuse) as ts:
@@ -179,5 +180,5 @@ if __name__ == '__main__':
 
     # train model
     model = MyDQN(env, config)
-    model.run(exp_schedule, lr_schedule)
-    # model.test()
+    #model.run(exp_schedule, lr_schedule)
+    model.test()
