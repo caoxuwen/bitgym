@@ -2,6 +2,12 @@
 
 BitGym contains several agents that applies reinforcement learning on bitcoin trading. This is a CS234 course project.
 
+The agents are in /agents folder, we have three types - dqn-based, pg-based and traditional trading strategies. 
+
+To run training example - python dqn/agents/dqn/q7_prepro.py
+To run evaluation - change dqn/agents/dqn/q7_prepro.py last line from model.run to model.test
+To see trading behavior in test - change dqn/agents/dqn/configs/q7_prepro.py render_test = True
+
 This project depends on the [TradingGym](https://github.com/Yvictor/TradingGym) project.
 
 
